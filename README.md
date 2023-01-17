@@ -1,4 +1,4 @@
-[![](banner.png)](https://github.com/AlexLoup33/BossRushGameJam)
+[![](banner.png)](https://itch.io/jam/boss-rush-jam-2023)
 
 README - Boss Rush Game Jam
 -----------------------
