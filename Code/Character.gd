@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 onready var HitBox = $CollisionShape2D
 onready var Texture = $Sprite
+onready var ParryP = $ParryPivot
 
 var velocity = Vector2.ZERO
 
@@ -10,6 +11,7 @@ export var move_speed = 1200
 export var gravity = 4000
 export var jump = -1800
 export var jump_count = 0
+var dmg;
 
 var dash = false
 
@@ -38,7 +40,7 @@ var dict_state = {
 
 var dict_parry = {
 	0 : "Up",
-	1 : "Middle",
+	1 : "Mid",
 	2 : "Down"
 }
 
@@ -108,6 +110,8 @@ func _process(delta):
 			else :
 				set_state(State.Walk)
 	
+	print(velocity.x)
+	
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
 		Texture.flip_h = true
@@ -125,7 +129,6 @@ func _physics_process(delta):
 	#Reset the amount of jump possible if the player hit the ground
 	if is_on_floor():
 		jump_count = 0
-	print(jump_count)
 	
 	if Input.is_action_just_pressed("jump"): #Jump System
 		if is_on_floor() or jump_count < 2:
@@ -134,13 +137,36 @@ func _physics_process(delta):
 
 #### LOGIC ####
 
-func _update_parry(): #Change the parry mode with : Up / Mid / Down
-	pass
-
-func _attack():
-	pass
+func _update_parry(x): #Change the parry mode with : Up / Mid / Down
+	match(Texture.flip_h):
+		false:
+			match(x):
+				"Up":
+					ParryP.rotation_degrees = -45
+				"Mid":
+					ParryP.rotation_degrees = 0
+				"Down":
+					ParryP.rotation_degrees = 45
+		true :
+			match(x):
+				"Up":
+					ParryP.rotation_degrees = -135
+				"Mid":
+					ParryP.rotation_degrees = 180
+				"Down":
+					ParryP.rotation_degrees = 135
 
 func _update_animation():
 	pass
 
 #### REPONSES ####
+
+func _on_parry_changed():
+	_update_parry(dict_parry[get_parry()])
+
+func _on_Attack_body_entered(body):
+	if body.has_method("ennemy_damage"):
+		body.ennemy_damage(dmg)
+
+func _on_state_changed():
+	_update_animation()
