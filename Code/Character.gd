@@ -108,10 +108,6 @@ func _process(delta):
 			else :
 				set_state(State.Walk)
 	
-	#Reset the amount of jump possible if the player hit the ground
-	if is_on_floor():
-		jump_count = 0
-	
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
 		Texture.flip_h = true
@@ -126,10 +122,15 @@ func _physics_process(delta):
 	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
+	#Reset the amount of jump possible if the player hit the ground
+	if is_on_floor():
+		jump_count = 0
+	print(jump_count)
+	
 	if Input.is_action_just_pressed("jump"): #Jump System
-		if is_on_floor() or jump_count <= 2:
-			velocity.y = jump
+		if is_on_floor() or jump_count < 2:
 			jump_count += 1
+			velocity.y = jump
 
 #### LOGIC ####
 
