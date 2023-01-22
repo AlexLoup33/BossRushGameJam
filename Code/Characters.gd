@@ -4,7 +4,7 @@ enum STATE {
 	Idle, Walk, Run, Jump, Parry, Attack, Hurt
 }
 
-
+print("mes couilles")
 
 export var speed : int = 500
 export var gravity : int = 400
