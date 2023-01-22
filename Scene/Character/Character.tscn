@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Ressources/icon.png" type="Texture" id=1]
-[ext_resource path="res://Code/Character.gd" type="Script" id=2]
+[ext_resource path="res://Code/Characters.gd" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 31.1448
@@ -45,6 +45,6 @@ rotation = 3.14159
 position = Vector2( 45, 0 )
 shape = SubResource( 2 )
 
-[connection signal="parry_changed" from="." to="." method="_on_parry_changed"]
+[connection signal="facing_direction_changed" from="." to="." method="_on_facing_direction_changed"]
 [connection signal="state_changed" from="." to="." method="_on_state_changed"]
 [connection signal="body_entered" from="Attack" to="." method="_on_Attack_body_entered"]
