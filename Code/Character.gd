@@ -7,10 +7,11 @@ onready var ParryP = $ParryPivot
 var velocity = Vector2.ZERO
 
 export var life = 100
-export var move_speed = 80
-export var gravity = 20
-export var gravity_max = 200
-export var jump = 30
+export var speed = 1200
+const move_speed = 1200
+const max_speed = 2200
+export var gravity = 4000
+export var jump = -1800
 export var jump_count = 0
 var dmg;
 
@@ -19,6 +20,7 @@ var dash = false
 enum State {
 	Idle, 
 	Walk, 
+	Run,
 	Dash, 
 	Attack,
 	Jump,
@@ -76,20 +78,9 @@ func _ready():
 func _get_input():
 	#Movement System
 	if Input.is_action_pressed("move_right"):
-		velocity.x += move_speed
+		velocity.x += speed
 	if Input.is_action_pressed("move_left"):
-		velocity.x -= move_speed
-	if Input.is_action_pressed("dash"):
-		dash = true
-	else : 
-		dash = false
-	
-	#Fight System
-	if Input.is_action_pressed("attack"):
-		set_state(State.Attack)
-	if Input.is_action_pressed("parry"):
-		set_state(State.Parry)
-	
+		velocity.x -= speed
 	#Parry System
 	if Input.is_action_just_pressed("parry_up"):
 		set_parry(Parry.Up)
@@ -98,26 +89,38 @@ func _get_input():
 	elif Input.is_action_just_pressed("parry_down"):
 		set_parry(Parry.Down)
 
-##func _process(delta):
-#	#Update State System
-#	if dash:
-#		set_state(State.Dash)
-#	else :
-#		if !is_on_floor():
-#			set_state(State.Jump)
-#		else : 
-#			if velocity == Vector2.ZERO:
-#				set_state(State.Idle)
-#			else :
-#				set_state(State.Walk)
-#
-#	print(velocity.x)
-#
-#	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
-#	if velocity.x < 0 : 
-#		Texture.flip_h = true
-#	elif velocity.x > 0 : 
-#		Texture.flip_h = false
+func _process(delta):
+	if Input.is_action_pressed("run"):
+		speed = max_speed
+	else :
+		speed = move_speed
+	print(speed)
+	#Set State system 
+	if Input.is_action_pressed("attack"):
+		set_state(State.Attack)
+	elif Input.is_action_pressed("parry"):
+		set_state(State.Parry)
+	else : 
+		if !is_on_floor():
+			set_state(State.Jump)
+		else:
+			if velocity.y == 0:
+				set_state(State.Idle)
+			else : 
+				if velocity.x == max_speed:
+					set_state(State.Run)
+				else: 
+					set_state(State.Walk)
+	
+	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
+	if velocity.x < 0 : 
+		Texture.flip_h = true
+		$Attack.rotation_degrees = 180
+		$Interaction.rotation_degrees = 180
+	elif velocity.x > 0 : 
+		Texture.flip_h = false
+		$Attack.rotation_degrees = 0
+		$Interaction.rotation_degrees = 0
 
 func _physics_process(delta):
 	velocity.x = 0 #reset the mouvement of the player for not let him infinite slide
@@ -135,24 +138,6 @@ func _physics_process(delta):
 		if is_on_floor() or jump_count < 2:
 			jump_count += 1
 			velocity.y = jump
-
-#func _physics_process(delta):
-#	velocity.y += gravity
-#	if velocity.y > gravity_max:
-#		velocity.y = gravity_max
-#
-#	if Input.is_action_pressed("move_right"):
-#		velocity.x = move_speed
-#	elif Input.is_action_pressed("move_left"):
-#		velocity.x = -move_speed
-#	else : 
-#		velocity.x = 0
-#
-#	if is_on_floor() and jump_count < 2:
-#		if Input.is_action_just_released("jump"):
-#			velocity.y = -jump
-#
-#	velocity = move_and_slide(velocity, UP) 
 
 #### LOGIC ####
 
@@ -188,4 +173,6 @@ func _on_Attack_body_entered(body):
 		body.ennemy_damage(dmg)
 
 func _on_state_changed():
+	_update_animation()
+
 	_update_animation()

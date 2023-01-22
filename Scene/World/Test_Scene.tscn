@@ -11,9 +11,6 @@ extents = Vector2( 1, 1 )
 
 [node name="Character" parent="." instance=ExtResource( 1 )]
 position = Vector2( 9, -156 )
-speed = null
-gravity = null
-jump = null
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
