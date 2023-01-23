@@ -13,6 +13,11 @@ config_version=4
 config/name="Boss Rush Game Jam"
 config/icon="res://Ressources/icon.png"
 
+[autoload]
+
+SaveSettings="*res://Code/SaveSettings.gd"
+GlobalSettings="*res://Code/global_settings.gd"
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
