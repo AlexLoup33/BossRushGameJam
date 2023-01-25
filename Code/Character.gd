@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 onready var HitBox = $CollisionShape2D
-onready var Texture = $Sprite
+onready var Texture = $AnimatedSprite
 onready var ParryP = $ParryPivot
 
 var velocity = Vector2.ZERO
@@ -94,7 +94,6 @@ func _process(delta):
 		speed = max_speed
 	else :
 		speed = move_speed
-	print(speed)
 	#Set State system 
 	if Input.is_action_pressed("attack"):
 		set_state(State.Attack)
@@ -115,12 +114,16 @@ func _process(delta):
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
 		Texture.flip_h = true
+		$HeadPivot.rotation_degrees = 180
 		$Attack.rotation_degrees = 180
 		$Interaction.rotation_degrees = 180
+		_update_parry(dict_parry[get_parry()])
 	elif velocity.x > 0 : 
 		Texture.flip_h = false
+		$HeadPivot.rotation_degrees = 0
 		$Attack.rotation_degrees = 0
 		$Interaction.rotation_degrees = 0
+		_update_parry(dict_parry[get_parry()])
 
 func _physics_process(delta):
 	velocity.x = 0 #reset the mouvement of the player for not let him infinite slide
@@ -173,6 +176,4 @@ func _on_Attack_body_entered(body):
 		body.ennemy_damage(dmg)
 
 func _on_state_changed():
-	_update_animation()
-
 	_update_animation()

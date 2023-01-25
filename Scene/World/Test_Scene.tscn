@@ -57,10 +57,10 @@ scale = Vector2( 1000, 100 )
 mesh = SubResource( 1 )
 
 [node name="BrightnessControler" type="ColorRect" parent="."]
-margin_left = -1678.0
-margin_top = -1339.0
-margin_right = 1904.0
-margin_bottom = 1485.0
+margin_left = -1567.0
+margin_top = -1283.0
+margin_right = 2015.0
+margin_bottom = 1541.0
 color = Color( 0, 0, 0, 0 )
 
 [node name="Music" parent="." instance=ExtResource( 3 )]
