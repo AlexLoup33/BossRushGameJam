@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Ressources/icon.png" type="Texture" id=1]
 [ext_resource path="res://Code/Boss1.gd" type="Script" id=2]
@@ -8,6 +8,12 @@ extents = Vector2( 32.5, 32 )
 
 [sub_resource type="CapsuleShape2D" id=2]
 height = 48.0
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.435294, 0.435294, 0.435294, 1 )
 
 [node name="Boss1" type="KinematicBody2D"]
 script = ExtResource( 2 )
@@ -21,6 +27,15 @@ shape = SubResource( 1 )
 
 [node name="AttackArea" type="Area2D" parent="."]
 
-[node name="AttackBpx" type="CollisionShape2D" parent="AttackArea"]
+[node name="AttackBox" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2( 45, 0 )
 shape = SubResource( 2 )
+
+[node name="LifeBar" type="ProgressBar" parent="."]
+margin_left = -34.0
+margin_top = -55.0
+margin_right = 33.0
+margin_bottom = -41.0
+custom_styles/fg = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
+percent_visible = false

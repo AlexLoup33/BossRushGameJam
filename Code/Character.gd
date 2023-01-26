@@ -72,6 +72,7 @@ func get_parry():
 #### BUILT-IN ####
 
 func _ready():
+	$Attack/AttackBox.disabled = true
 	set_state(State.Idle)
 	parry = Parry.Mid
 
@@ -96,6 +97,7 @@ func _process(delta):
 		speed = move_speed
 	#Set State system 
 	if Input.is_action_pressed("attack"):
+		$Attack/AttackBox.disabled = false
 		set_state(State.Attack)
 	elif Input.is_action_pressed("parry"):
 		set_state(State.Parry)
@@ -110,7 +112,6 @@ func _process(delta):
 					set_state(State.Run)
 				else: 
 					set_state(State.Walk)
-	
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
 		Texture.flip_h = true
@@ -164,7 +165,7 @@ func _update_parry(x): #Change the parry mode with : Up / Mid / Down
 					ParryP.rotation_degrees = 135
 
 func _update_animation():
-	pass
+	pass 
 
 #### REPONSES ####
 
@@ -172,8 +173,8 @@ func _on_parry_changed():
 	_update_parry(dict_parry[get_parry()])
 
 func _on_Attack_body_entered(body):
-	if body.has_method("ennemy_damage"):
-		body.ennemy_damage(dmg)
+	if body.has_method("get_damaged"):
+		body.get_damaged(100)
 
 func _on_state_changed():
 	_update_animation()
