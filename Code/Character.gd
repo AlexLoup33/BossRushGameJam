@@ -98,6 +98,8 @@ func _process(delta):
 	#Set State system 
 	if Input.is_action_pressed("attack"):
 		$Attack/AttackBox.disabled = false
+		yield(get_tree().create_timer(0.1), "timeout")
+		$Attack/AttackBox.disabled = true
 		set_state(State.Attack)
 	elif Input.is_action_pressed("parry"):
 		set_state(State.Parry)
