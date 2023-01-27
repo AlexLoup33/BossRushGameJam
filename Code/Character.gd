@@ -176,7 +176,7 @@ func _on_parry_changed():
 
 func _on_Attack_body_entered(body):
 	if body.has_method("get_damaged"):
-		body.get_damaged(100)
+		body.get_damaged(1000)
 
 func _on_state_changed():
 	_update_animation()

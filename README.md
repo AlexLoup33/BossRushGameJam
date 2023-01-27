@@ -11,7 +11,7 @@ README - Boss Rush Game Jam
 
 ## About The Project
 * **Godot Video-Game creating during the "Boss Rush Game Jam".**
-* **Made by [Jason Li](https://github.com/dethland), [Neocarther](https://github.com/Neocarther), [AlexLoup](https://github.com/AlexLoup33) and [Polyheart]()**
+* **Made by [Jason Li](https://github.com/dethland), [Neocarther](https://github.com/Neocarther), [AlexLoup](https://github.com/AlexLoup33) and [Polyheart](https://github.com/PolyHeart)**
 
 ## Technologies
 ![Godot](https://godotengine.org/assets/press/logo_large_color_light.png)
@@ -36,4 +36,4 @@ git@github.com:AlexLoup33/BossRushGameJam.git
 * **Neocarther - bergerleo001@gmail.com**
 * **Jason Li - jasonli1919176@gmail.com**
 * **AlexLoup - a.loupoueyou@icloud.com**
-* **Polyheart - **
+* **Polyheart - jlsdvn@gmail.com**
