@@ -1,9 +1,73 @@
 extends KinematicBody2D
 
 onready var LifeBar = $LifeBar
+onready var AnimationSprite = $AnimatedSprite
 
 export var life : int = 10000
 export var phase = 1
+export var dmg = 45
+
+enum State {
+	Idle, 
+	Attack,
+	Death,
+}
+
+enum Rage {
+	Off, 
+	On
+}
+
+enum Dir{
+	Up, 
+	Mid, 
+	Down
+}
+
+var dict_state = {
+	0 : "Idle",
+	1 : "Attack",
+	2 : "Death" 
+}
+
+var dict_Dir = {
+	0 : "Up",
+	1 : "Mid",
+	2 : "Down"
+}
+
+var state = State.Idle setget set_state, get_state
+var rage = Rage.Off setget set_rage, get_rage
+var dir = Dir.Mid setget set_dir, get_dir
+
+signal state_changed
+signal rage_changed
+signal attack_seq_finished
+
+#### ACCESSORS ####
+
+func set_state(value):
+	if state != value:
+		state = value
+	emit_signal("state_changed")
+
+func get_state():
+	return state
+
+func set_rage(value):
+	if rage != value:
+		rage = value
+	emit_signal("rage_changed")
+
+func get_rage():
+	return rage
+
+func set_dir(value):
+	if dir != value:
+		dir = value
+
+func get_dir():
+	return dir
 
 #### BUILT-IN ####
 
@@ -11,12 +75,29 @@ func _ready():
 	LifeBar.max_value = life
 
 func _process(delta):
-	pass
+	if !get_rage():
+		var heavy = randi()%2 #randomize if the boss will use heavy attack sequences or not
+		var seq = randi()%2 #Pick one of the attack sequence's boss
+		if !heavy:
+			if seq:
+				for i in range(3):
+					if i == 2:
+						attack(Dir.Down)
+					else:
+						attack(Dir.Up)
+			else:
+				for i in range(3):
+					attack(Dir.Up)
+		else:
+			for i in range(6):
+				attack(Dir.Up)
 
 #### LOGIC ####
 
-func attack_up(dmg):
-	pass
+func attack(direction):
+	set_dir(direction)
+	set_state(State.Attack)
+	yield(AnimationSprite, "animation_finished")
 
 func get_damaged(dmg):
 	if (life - dmg) <= 0:
@@ -25,4 +106,33 @@ func get_damaged(dmg):
 		life -= dmg
 	LifeBar.value -= life
 	if life == 0:
+		set_state(State.Death)
+		yield(AnimationSprite, "animation_finished")
 		queue_free()
+
+func _update_animation():
+	if get_state() == State.Attack:
+		AnimationSprite.play(dict_state[get_state()]+dict_Dir[get_dir()])
+	else :
+		AnimationSprite.play(dict_state[get_state()])
+
+#### RESPONSES ####
+
+func _on_Boss1_rage_changed():
+	if get_rage():
+		dmg = 65
+	else:
+		dmg = 45
+
+func _on_Boss1_state_changed():
+	_update_animation()
+
+
+func _on_AttackArea_body_entered(body):
+	if body.name == "Character":
+		body.get_damaged(dmg)
+
+
+func _on_AnimatedSprite_animation_finished():
+	if "Attack".is_subsequence_of(AnimationSprite.name):
+		set_state(State.Idle)

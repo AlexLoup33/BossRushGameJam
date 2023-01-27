@@ -1,7 +1,15 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Ressources/icon.png" type="Texture" id=1]
 [ext_resource path="res://Code/Boss1.gd" type="Script" id=2]
+
+[sub_resource type="SpriteFrames" id=5]
+animations = [ {
+"frames": [  ],
+"loop": true,
+"name": "attackup",
+"speed": 5.0
+} ]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 32.5, 32 )
@@ -17,6 +25,10 @@ bg_color = Color( 0.435294, 0.435294, 0.435294, 1 )
 
 [node name="Boss1" type="KinematicBody2D"]
 script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 5 )
+animation = "attackup"
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
@@ -39,3 +51,8 @@ margin_bottom = -41.0
 custom_styles/fg = SubResource( 3 )
 custom_styles/bg = SubResource( 4 )
 percent_visible = false
+
+[connection signal="rage_changed" from="." to="." method="_on_Boss1_rage_changed"]
+[connection signal="state_changed" from="." to="." method="_on_Boss1_state_changed"]
+[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_AttackArea_body_entered"]
