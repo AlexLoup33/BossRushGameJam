@@ -53,6 +53,8 @@ signal state_changed
 var parry setget set_parry, get_parry
 signal parry_changed
 
+signal get_damaged
+
 #### ACCESSORS ####
 
 func set_state(value):
@@ -74,7 +76,7 @@ func get_parry():
 func _ready():
 	$Attack/AttackBox.disabled = true
 	set_state(State.Idle)
-	parry = Parry.Mid
+	set_parry(Parry.Mid)
 
 func _get_input():
 	#Movement System
@@ -95,6 +97,7 @@ func _process(delta):
 		speed = max_speed
 	else :
 		speed = move_speed
+	
 	#Set State system 
 	if Input.is_action_pressed("attack"):
 		$Attack/AttackBox.disabled = false
@@ -168,6 +171,10 @@ func _update_parry(x): #Change the parry mode with : Up / Mid / Down
 
 func _update_animation():
 	pass 
+
+func get_damaged(dmg):
+	life -= dmg
+	emit_signal("get_damaged")
 
 #### REPONSES ####
 

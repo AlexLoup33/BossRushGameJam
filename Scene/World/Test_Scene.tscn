@@ -15,7 +15,7 @@ extents = Vector2( 1, 1 )
 script = ExtResource( 2 )
 
 [node name="Boss1" parent="." instance=ExtResource( 5 )]
-position = Vector2( -816, -134 )
+position = Vector2( -500, -134 )
 
 [node name="Character" parent="." instance=ExtResource( 1 )]
 position = Vector2( 9, -156 )
@@ -61,10 +61,10 @@ scale = Vector2( 1000, 100 )
 mesh = SubResource( 1 )
 
 [node name="BrightnessControler" type="ColorRect" parent="."]
-margin_left = -1567.0
-margin_top = -1283.0
-margin_right = 2015.0
-margin_bottom = 1541.0
+margin_left = -1432.0
+margin_top = -1301.0
+margin_right = 2150.0
+margin_bottom = 1523.0
 color = Color( 0, 0, 0, 0 )
 
 [node name="Music" parent="." instance=ExtResource( 3 )]

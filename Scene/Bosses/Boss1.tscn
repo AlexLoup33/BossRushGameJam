@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Ressources/icon.png" type="Texture" id=1]
 [ext_resource path="res://Code/Boss1.gd" type="Script" id=2]
@@ -23,6 +23,11 @@ bg_color = Color( 1, 0, 0, 1 )
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.435294, 0.435294, 0.435294, 1 )
 
+[sub_resource type="CubeMesh" id=6]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 1, 1 )
+
 [node name="Boss1" type="KinematicBody2D"]
 script = ExtResource( 2 )
 
@@ -44,13 +49,42 @@ position = Vector2( 45, 0 )
 shape = SubResource( 2 )
 
 [node name="LifeBar" type="ProgressBar" parent="."]
-margin_left = -34.0
-margin_top = -55.0
-margin_right = 33.0
-margin_bottom = -41.0
+margin_left = -36.0
+margin_top = -64.0
+margin_right = 34.0
+margin_bottom = -45.0
 custom_styles/fg = SubResource( 3 )
 custom_styles/bg = SubResource( 4 )
+max_value = 10000.0
+step = 1.0
+value = 10000.0
 percent_visible = false
+
+[node name="LeftPillar" type="StaticBody2D" parent="."]
+
+[node name="LeftMesh" type="MeshInstance2D" parent="LeftPillar"]
+modulate = Color( 0.345098, 0.25098, 0.0862745, 1 )
+position = Vector2( -168, -34.5 )
+scale = Vector2( 45, 66.5 )
+mesh = SubResource( 6 )
+
+[node name="LeftBox" type="CollisionShape2D" parent="LeftPillar"]
+position = Vector2( -168, -34.5 )
+scale = Vector2( 45, 66.5 )
+shape = SubResource( 7 )
+
+[node name="RightPillar" type="StaticBody2D" parent="."]
+
+[node name="RightMesh" type="MeshInstance2D" parent="RightPillar"]
+modulate = Color( 0.345098, 0.25098, 0.0862745, 1 )
+position = Vector2( 168, -34.5 )
+scale = Vector2( 45, 66.5 )
+mesh = SubResource( 6 )
+
+[node name="RightBox" type="CollisionShape2D" parent="RightPillar"]
+position = Vector2( 168, -34.5 )
+scale = Vector2( 45, 66.5 )
+shape = SubResource( 7 )
 
 [connection signal="rage_changed" from="." to="." method="_on_Boss1_rage_changed"]
 [connection signal="state_changed" from="." to="." method="_on_Boss1_state_changed"]
