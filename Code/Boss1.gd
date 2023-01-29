@@ -7,6 +7,7 @@ export var life : int = 100000
 export var phase = 1
 export var dmg = 45
 var armor = 0
+var parry = 0
 
 enum State {
 	Idle, 
@@ -127,6 +128,19 @@ func _update_animation():
 func rage_seq():
 	while get_rage():
 		armor = 100
+		if get_node("RightPillar") == null and get_node("LeftPillar") == null :
+			set_rage(Rage.Off)
+			emit_signal("rage_finished")
+		else : 
+			var att_num = randi()%7
+			for i in range(att_num):
+				var att = randi()%3 + 3
+				attack(att)
+				yield(AnimationSprite, "animation_finished")
+			if parry == att_num:
+				yield(get_tree().create_timer(5), "timeout")
+			else : 
+				yield(get_tree().create_timer(2), "timeout")
 
 #### RESPONSES ####
 
@@ -135,6 +149,7 @@ func _on_Boss1_rage_changed():
 		dmg = 65
 	else:
 		dmg = 45
+
 
 func _on_Boss1_state_changed():
 	_update_animation()
