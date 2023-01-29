@@ -20,6 +20,7 @@ action = "ui_cancel"
 shortcut = SubResource( 4 )
 
 [node name="SettingsMenu" type="CanvasLayer"]
+pause_mode = 2
 script = ExtResource( 3 )
 
 [node name="Background" type="ColorRect" parent="." groups=["SettingsMenu"]]
@@ -191,6 +192,17 @@ margin_right = 300.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 600, 370 )
 
+[node name="QuitGameBtn" type="Button" parent="." groups=["SettingsMenu"]]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -48.0
+margin_top = -26.0
+margin_right = 48.0
+custom_fonts/font = SubResource( 3 )
+text = "Quit Game"
+
 [connection signal="item_selected" from="MarginContainer/GridContainer/DisplayModeSelector" to="." method="_on_DisplayModeSelector_item_selected"]
 [connection signal="value_changed" from="MarginContainer/GridContainer/VolumeSliderContainer/VolumeSlider" to="." method="_on_VolumeSlider_value_changed"]
 [connection signal="value_changed" from="MarginContainer/GridContainer/BrightnessSliderContainer/BrightnessSlider" to="." method="_on_BrightnessSlider_value_changed"]
@@ -198,3 +210,4 @@ rect_min_size = Vector2( 600, 370 )
 [connection signal="pressed" from="MarginContainer/KeyMapping" to="." method="_on_KeyMappingBtn_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_SettingsButton_pressed"]
 [connection signal="pressed" from="CloseMenu" to="." method="_on_CloseMenu_pressed"]
+[connection signal="pressed" from="QuitGameBtn" to="." method="_on_QuitGameBtn_pressed"]

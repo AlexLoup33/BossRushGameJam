@@ -57,3 +57,6 @@ func _on_LanguageSelector_item_selected(index):
 func _on_KeyMappingBtn_pressed():
 	$KeyMapContainer.show()
 
+
+func _on_QuitGameBtn_pressed():
+	get_tree().quit()
