@@ -60,3 +60,8 @@ func _on_KeyMappingBtn_pressed():
 
 func _on_QuitGameBtn_pressed():
 	get_tree().quit()
+
+
+func _on_SaveToTitleBtn_pressed():
+	self.is_paused = !is_paused
+	get_tree().change_scene("res://Scene/TitleScreen.tscn")

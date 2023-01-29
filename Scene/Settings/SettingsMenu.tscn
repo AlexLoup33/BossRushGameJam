@@ -192,14 +192,29 @@ margin_right = 300.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 600, 370 )
 
-[node name="QuitGameBtn" type="Button" parent="." groups=["SettingsMenu"]]
+[node name="MarginContainer2" type="MarginContainer" parent="." groups=["SettingsMenu"]]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -48.0
-margin_top = -26.0
-margin_right = 48.0
+margin_left = -145.0
+margin_top = -40.0
+margin_right = 145.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2" groups=["SettingsMenu"]]
+margin_right = 290.0
+margin_bottom = 40.0
+
+[node name="SaveToTitleBtn" type="Button" parent="MarginContainer2/HBoxContainer" groups=["SettingsMenu"]]
+margin_right = 190.0
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 3 )
+text = "Save and Quit to Title"
+
+[node name="QuitGameBtn" type="Button" parent="MarginContainer2/HBoxContainer" groups=["SettingsMenu"]]
+margin_left = 194.0
+margin_right = 290.0
+margin_bottom = 40.0
 custom_fonts/font = SubResource( 3 )
 text = "Quit Game"
 
@@ -210,4 +225,5 @@ text = "Quit Game"
 [connection signal="pressed" from="MarginContainer/KeyMapping" to="." method="_on_KeyMappingBtn_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_SettingsButton_pressed"]
 [connection signal="pressed" from="CloseMenu" to="." method="_on_CloseMenu_pressed"]
-[connection signal="pressed" from="QuitGameBtn" to="." method="_on_QuitGameBtn_pressed"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/SaveToTitleBtn" to="." method="_on_SaveToTitleBtn_pressed"]
+[connection signal="pressed" from="MarginContainer2/HBoxContainer/QuitGameBtn" to="." method="_on_QuitGameBtn_pressed"]
