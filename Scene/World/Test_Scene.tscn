@@ -68,5 +68,7 @@ margin_bottom = 1523.0
 color = Color( 0, 0, 0, 0 )
 
 [node name="Music" parent="." instance=ExtResource( 3 )]
+autoplay = false
 
 [node name="SettingsMenu" parent="." instance=ExtResource( 4 )]
+pause_mode = 2

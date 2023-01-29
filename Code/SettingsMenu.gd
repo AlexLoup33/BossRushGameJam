@@ -1,11 +1,11 @@
 extends CanvasLayer
 
-signal game_paused()
 
 onready var display_mode_select = $MarginContainer/GridContainer/DisplayModeSelector
 onready var volume_slider = $MarginContainer/GridContainer/VolumeSliderContainer/VolumeSlider
 onready var brightness_slider = $MarginContainer/GridContainer/BrightnessSliderContainer/BrightnessSlider
 onready var language_select = $MarginContainer/GridContainer/LanguageSelector
+var is_paused = false setget set_is_paused
 
 
 func _ready():
@@ -17,15 +17,24 @@ func _ready():
 	$SettingsButton.show()
 	$KeyMapContainer.hide()
 
+
+
+func set_is_paused(value):
+	is_paused = value
+	get_tree().paused = is_paused
+
+
 func _on_SettingsButton_pressed():
 	get_tree().call_group("SettingsMenu", "show")
 	$SettingsButton.hide()
+	self.is_paused = !is_paused
 
 
 func _on_CloseMenu_pressed():
 	get_tree().call_group("SettingsMenu", "hide")
 	$SettingsButton.show()
 	$KeyMapContainer.hide()
+	self.is_paused = !is_paused
 
 
 #Options

@@ -112,10 +112,10 @@ func _process(delta):
 		else:
 			if velocity.y == 0:
 				set_state(State.Idle)
-			else : 
+			else:
 				if velocity.x == max_speed:
 					set_state(State.Run)
-				else: 
+				else:
 					set_state(State.Walk)
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
