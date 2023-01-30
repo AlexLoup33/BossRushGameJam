@@ -18,7 +18,7 @@ script = ExtResource( 2 )
 position = Vector2( -500, -134 )
 
 [node name="Character" parent="." instance=ExtResource( 1 )]
-position = Vector2( 9, -156 )
+position = Vector2( 6, -131 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
@@ -61,10 +61,10 @@ scale = Vector2( 1000, 100 )
 mesh = SubResource( 1 )
 
 [node name="BrightnessControler" type="ColorRect" parent="."]
-margin_left = -1432.0
-margin_top = -1301.0
-margin_right = 2150.0
-margin_bottom = 1523.0
+margin_left = -1564.0
+margin_top = -1272.0
+margin_right = 2018.0
+margin_bottom = 1552.0
 color = Color( 0, 0, 0, 0 )
 
 [node name="Music" parent="." instance=ExtResource( 3 )]

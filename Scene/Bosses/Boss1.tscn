@@ -73,6 +73,9 @@ position = Vector2( -168, -34.5 )
 scale = Vector2( 45, 66.5 )
 shape = SubResource( 7 )
 
+[node name="Position2D" type="Position2D" parent="LeftPillar"]
+position = Vector2( 168, -260 )
+
 [node name="RightPillar" type="StaticBody2D" parent="."]
 
 [node name="RightMesh" type="MeshInstance2D" parent="RightPillar"]
@@ -85,6 +88,9 @@ mesh = SubResource( 6 )
 position = Vector2( 168, -34.5 )
 scale = Vector2( 45, 66.5 )
 shape = SubResource( 7 )
+
+[node name="Position2D" type="Position2D" parent="RightPillar"]
+position = Vector2( -168, -260 )
 
 [connection signal="rage_changed" from="." to="." method="_on_Boss1_rage_changed"]
 [connection signal="state_changed" from="." to="." method="_on_Boss1_state_changed"]

@@ -48,11 +48,10 @@ var dict_parry = {
 }
 
 var state setget set_state, get_state
-signal state_changed
-
 var parry setget set_parry, get_parry
-signal parry_changed
 
+signal state_changed
+signal parry_changed
 signal get_damaged
 
 #### ACCESSORS ####
