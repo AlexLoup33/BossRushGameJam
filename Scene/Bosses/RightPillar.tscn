@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="CubeMesh" id=6]
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 1, 1 )
+
+[node name="RightPillar" type="StaticBody2D"]
+
+[node name="RightMesh" type="MeshInstance2D" parent="."]
+modulate = Color( 0.345098, 0.25098, 0.0862745, 1 )
+position = Vector2( 168, -34.5 )
+scale = Vector2( 45, 66.5 )
+mesh = SubResource( 6 )
+
+[node name="RightBox" type="CollisionShape2D" parent="."]
+position = Vector2( 168, -34.5 )
+scale = Vector2( 45, 66.5 )
+shape = SubResource( 7 )
+
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( -168, -260 )

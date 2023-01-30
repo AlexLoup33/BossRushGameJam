@@ -143,14 +143,14 @@ func get_damaged(dmg):
 		queue_free()
 
 func left_pillar_damaged(dmg):
-	if LeftPillarRes <= 0:
+	if LeftPillarRes - dmg <= 0:
 		LeftPillarRes = 0
 	else : 
 		LeftPillarRes -= dmg
 	if LeftPillarRes == 0:
 		queue_free()
 
-func Right_pillar_damaged(dmg):
+func right_pillar_damaged(dmg):
 	if RightPillarRes <= 0:
 		RightPillarRes = 0
 	else : 

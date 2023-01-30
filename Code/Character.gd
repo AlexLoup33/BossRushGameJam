@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-onready var HitBox = $CollisionShape2D
+onready var HitBox = $Bodybox
 onready var Texture = $AnimatedSprite
 onready var ParryP = $ParryPivot
 
@@ -99,23 +99,32 @@ func _process(delta):
 	
 	#Set State system 
 	if Input.is_action_pressed("attack"):
-		$Attack/AttackBox.disabled = false
-		yield(get_tree().create_timer(0.1), "timeout")
-		$Attack/AttackBox.disabled = true
 		set_state(State.Attack)
 	elif Input.is_action_pressed("parry"):
-		set_state(State.Parry)
+		pass
+#		set_state(State.Parry)
+	elif Input.is_action_just_pressed("dash"):
+		pass
+#		set_state(State.Dash)
 	else : 
 		if !is_on_floor():
-			set_state(State.Jump)
+			pass
+#			set_state(State.Jump)
 		else:
-			if velocity.y == 0:
+			if velocity.x == 0:
 				set_state(State.Idle)
 			else:
 				if velocity.x == max_speed:
 					set_state(State.Run)
 				else:
-					set_state(State.Walk)
+					pass
+#					set_state(State.Walk)
+	
+	if Texture.name == "Attack" and (Texture.frame >= 4 and Texture.frame <= 6):
+		$Attack/AttackBox.disabled = true
+	else :
+		$Attack/AttackBox.disabled = false 
+		 
 	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
 	if velocity.x < 0 : 
 		Texture.flip_h = true
@@ -169,7 +178,10 @@ func _update_parry(x): #Change the parry mode with : Up / Mid / Down
 					ParryP.rotation_degrees = 135
 
 func _update_animation():
-	pass 
+	if get_state() == State.Parry:
+		pass
+	else :
+		Texture.play(dict_state[get_state()])
 
 func get_damaged(dmg):
 	life -= dmg
@@ -181,8 +193,19 @@ func _on_parry_changed():
 	_update_parry(dict_parry[get_parry()])
 
 func _on_Attack_body_entered(body):
-	if body.has_method("get_damaged") or body.has_method("left_pillar_damaged") or body.has_method("right_pillar_damaged"):
+	if body.has_method("get_damaged"):
 		body.get_damaged(1000)
+	elif body.has_method("left_pillar_damaged"):
+		print("pillar left attacked")
+		body.left_pillar_damaged(1000)
+	elif  body.has_method("right_pillar_damaged"):
+		body.right_pillar_damaged(1000)
+		print("pillar right attacked")
 
 func _on_state_changed():
 	_update_animation()
+
+
+func _on_animation_finished():
+	if Texture.name == "Attack" or Texture.name == "Parry":
+		set_state(State.Idle)
