@@ -181,7 +181,7 @@ func _on_parry_changed():
 	_update_parry(dict_parry[get_parry()])
 
 func _on_Attack_body_entered(body):
-	if body.has_method("get_damaged"):
+	if body.has_method("get_damaged") or body.has_method("left_pillar_damaged") or body.has_method("right_pillar_damaged"):
 		body.get_damaged(1000)
 
 func _on_state_changed():

@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
-var prefabDrone = preload("res://Scene/Bosses/Drone.tscn")
+var prefabRDrone = preload("res://Scene/Bosses/Drone.tscn")
+var prefabLDrone = preload("res://Scene/Bosses/Drone.tscn")
 
 onready var LifeBar = $LifeBar
 onready var AnimationSprite = $AnimatedSprite
@@ -11,6 +12,9 @@ export var LeftPillarRes = 3000
 export var RightPillarRes = 3000
 var armor = 0
 var parry = 0
+
+var lDrone_spawned = false
+var rDrone_spawned = false
 
 enum State {
 	Idle, 
@@ -104,7 +108,8 @@ func _process(delta):
 					else : 
 						yield(get_tree().create_timer(2), "timeout")
 		1:
-			yield(rage_seq(), "rage_finished")
+			rage_seq()
+			yield(self,"rage_finished")
 
 func ennemy_parry():
 	parry += 1
@@ -130,7 +135,9 @@ func get_damaged(dmg):
 	else : 
 		life -= (dmg - (armor*dmg)/100)
 	LifeBar.value -= (dmg - (armor*dmg)/100)
-	if life == 0:
+	if life <= (35*10000/100):
+		set_rage(Rage.On)
+	elif life == 0:
 		set_state(State.Death)
 		yield(AnimationSprite, "animation_finished")
 		queue_free()
@@ -159,10 +166,16 @@ func _update_animation():
 		AnimationSprite.play(dict_state[get_state()])
 
 func rage_seq():
-	var rDrone = prefabDrone.instance()
-	var lDrone = prefabDrone.instance()
-	get_parent().add_child(lDrone)
-	get_parent().add_child(rDrone)
+	var rDrone = prefabRDrone.instance()
+	var lDrone = prefabLDrone.instance()
+	if rDrone_spawned == false:
+		print("drone right spawn")
+		get_parent().add_child(rDrone)
+		rDrone_spawned = true
+	if lDrone_spawned == true:
+		print("drone left spawn")
+		get_parent().add_child(lDrone)
+		lDrone_spawned = true
 	lDrone.global_position = $LeftPillar/Position2D.global_position
 	rDrone.global_position = $RightPillar/Position2D.global_position
 	while get_rage():

@@ -1,4 +1,4 @@
-extends RigidBody2D
+extends KinematicBody2D
 
 var Player = get_node_or_null("res://Scene/Characters/Character.tscn")
 var prefabTir = preload("res://Scene/Bosses/Bullet.tscn")
