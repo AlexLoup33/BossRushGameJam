@@ -1,211 +1,99 @@
 extends KinematicBody2D
 
-onready var HitBox = $Bodybox
-onready var Texture = $AnimatedSprite
-onready var ParryP = $ParryPivot
-
-var velocity = Vector2.ZERO
-
-export var life = 100
-export var speed = 1200
-const move_speed = 1200
-const max_speed = 2200
-export var gravity = 4000
-export var jump = -1800
-export var jump_count = 0
-var dmg;
-
-var dash = false
-
-enum State {
-	Idle, 
-	Walk, 
-	Run,
-	Dash, 
-	Attack,
-	Jump,
-	Parry,
+enum STATE {
+	Idle, Run, Attack, Parry, Jump, Dash
 }
-
-enum Parry {
-	Up,
-	Mid, 
-	Down,
-}
+var State = STATE.Idle setget set_state, get_state
 
 var dict_state = {
-	0 : "Idle",
-	1 : "Walk",
-	2 : "Dash",
-	3 : "Attack",
-	4 : "Jump"
+	0: "Idle", 
+	1: "Run", 
+	2: "Attack",
+	3: "Parry",
+	4: "Jump ",
+	5: "Dash"
 }
 
-var dict_parry = {
-	0 : "Up",
-	1 : "Mid",
-	2 : "Down"
-}
-
-var state setget set_state, get_state
-var parry setget set_parry, get_parry
+var direction = Vector2.ZERO
+export var move_speed = 300
+export var dmg = 100
+onready var animated_sprite = $AnimatedSprite
+onready var attack_box = $Attack/AttackBox
 
 signal state_changed
-signal parry_changed
-signal get_damaged
 
 #### ACCESSORS ####
 
 func set_state(value):
-	state = value
+	if State != value:
+		State = value
 	emit_signal("state_changed")
 
 func get_state():
-	return state
-
-func set_parry(value):
-	parry = value
-	emit_signal("parry_changed")
-
-func get_parry():
-	return parry
+	return State
 
 #### BUILT-IN ####
 
 func _ready():
-	$Attack/AttackBox.disabled = true
-	set_state(State.Idle)
-	set_parry(Parry.Mid)
-
-func _get_input():
-	#Movement System
-	if Input.is_action_pressed("move_right"):
-		velocity.x += speed
-	if Input.is_action_pressed("move_left"):
-		velocity.x -= speed
-	#Parry System
-	if Input.is_action_just_pressed("parry_up"):
-		set_parry(Parry.Up)
-	elif Input.is_action_just_pressed("parry_mid"):
-		set_parry(Parry.Mid)
-	elif Input.is_action_just_pressed("parry_down"):
-		set_parry(Parry.Down)
+	pass
 
 func _process(delta):
-	if Input.is_action_pressed("run"):
-		speed = max_speed
-	else :
-		speed = move_speed
+	var __ = move_and_slide(direction * move_speed)
 	
-	#Set State system 
-	if Input.is_action_pressed("attack"):
-		set_state(State.Attack)
-	elif Input.is_action_pressed("parry"):
-		pass
-#		set_state(State.Parry)
+	if Input.is_action_just_pressed("attack"):
+		set_state(STATE.Attack)
 	elif Input.is_action_just_pressed("dash"):
-		pass
-#		set_state(State.Dash)
-	else : 
-		if !is_on_floor():
-			pass
-#			set_state(State.Jump)
-		else:
-			if velocity.x == 0:
-				set_state(State.Idle)
-			else:
-				if velocity.x == max_speed:
-					set_state(State.Run)
-				else:
-					pass
-#					set_state(State.Walk)
+		pass #state for dash (Progress)
+	elif Input.is_action_just_pressed("parry"):
+		pass #state for parry (Progress)
 	
-	if Texture.name == "Attack" and (Texture.frame >= 4 and Texture.frame <= 6):
-		$Attack/AttackBox.disabled = true
-	else :
-		$Attack/AttackBox.disabled = false 
-		 
-	#Flip the character Sprite and the Attack Box/Parry Box depend on the direction of the character
-	if velocity.x < 0 : 
-		Texture.flip_h = true
-		$HeadPivot.rotation_degrees = 180
-		$Attack.rotation_degrees = 180
-		$Interaction.rotation_degrees = 180
-		_update_parry(dict_parry[get_parry()])
-	elif velocity.x > 0 : 
-		Texture.flip_h = false
-		$HeadPivot.rotation_degrees = 0
-		$Attack.rotation_degrees = 0
-		$Interaction.rotation_degrees = 0
-		_update_parry(dict_parry[get_parry()])
+	if get_state() != STATE.Attack and get_state() != STATE.Parry and get_state() != STATE.Jump:
+		if direction.x != 0:
+			set_state(STATE.Run)
+		else : 
+			set_state(STATE.Idle)
+	_update_rotation()
+	_update_anim_box()
 
-func _physics_process(delta):
-	velocity.x = 0 #reset the mouvement of the player for not let him infinite slide
-	_get_input()
-	
-	velocity.y += gravity * delta
-	
-	velocity = move_and_slide(velocity, Vector2.UP)
-	
-	#Reset the amount of jump possible if the player hit the ground
-	if is_on_floor():
-		jump_count = 0
-	
-	if Input.is_action_just_pressed("jump"): #Jump System
-		if is_on_floor() or jump_count < 2:
-			jump_count += 1
-			velocity.y = jump
+func _input(event):
+	direction.x = 0
+	if get_state() != STATE.Dash:
+		direction.x = int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left"))
 
 #### LOGIC ####
 
-func _update_parry(x): #Change the parry mode with : Up / Mid / Down
-	match(Texture.flip_h):
-		false:
-			match(x):
-				"Up":
-					ParryP.rotation_degrees = -45
-				"Mid":
-					ParryP.rotation_degrees = 0
-				"Down":
-					ParryP.rotation_degrees = 45
-		true :
-			match(x):
-				"Up":
-					ParryP.rotation_degrees = -135
-				"Mid":
-					ParryP.rotation_degrees = 180
-				"Down":
-					ParryP.rotation_degrees = 135
+func _update_anim_box():
+	if (get_state() == STATE.Attack):
+		if (animated_sprite.frame >= 4 and animated_sprite.frame <= 6):
+			attack_box.disabled = false
+		else :
+			attack_box.disabled = true
+	elif (get_state() == STATE.Parry):
+		pass
 
 func _update_animation():
-	if get_state() == State.Parry:
-		pass
-	else :
-		Texture.play(dict_state[get_state()])
+	animated_sprite.play(dict_state[get_state()])
 
-func get_damaged(dmg):
-	life -= dmg
-	emit_signal("get_damaged")
+func _update_rotation():
+	if direction.x > 0:
+		animated_sprite.flip_h = false
+	elif direction.x < 0:
+		animated_sprite.flip_h = true
 
-#### REPONSES ####
+#### SIGNAL RESPONSES ####
 
-func _on_parry_changed():
-	_update_parry(dict_parry[get_parry()])
-
-func _on_Attack_body_entered(body):
-	if body.has_method("get_damaged"):
-		body.get_damaged(1000)
-	elif body.has_method("left_pillar_damaged"):
-		print("pillar left attacked")
-		body.left_pillar_damaged(1000)
-	elif  body.has_method("right_pillar_damaged"):
-		body.right_pillar_damaged(1000)
-		print("pillar right attacked")
-
-func _on_state_changed():
+func on_state_changed():
 	_update_animation()
 
-
 func _on_animation_finished():
-	if Texture.name == "Attack" or Texture.name == "Parry":
-		set_state(State.Idle)
+	if "Attack".is_subsequence_of(animated_sprite.get_animation()) or "Parry".is_subsequence_of(animated_sprite.get_animation()) or "Dash".is_subsequence_of(animated_sprite.get_animation()):
+		if direction.x != 0:
+			set_state(STATE.Idle)
+		else : 
+			set_state(STATE.Run)
+
+func _on_Attack_body_entered(body):
+	if body.has_method("boss_damaged"):
+		body.boss_damaged(dmg)
+	if body.has_method("pillar_damaged"):
+		body.pillar_damaged(dmg)
