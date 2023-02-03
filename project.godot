@@ -98,6 +98,10 @@ craft={
  ]
 }
 
+[locale]
+
+translations=PoolStringArray( "res://translation.fr.translation" )
+
 [physics]
 
 common/enable_pause_aware_picking=true

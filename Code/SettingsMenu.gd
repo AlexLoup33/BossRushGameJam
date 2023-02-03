@@ -10,9 +10,9 @@ var is_paused = false setget set_is_paused
 
 func _ready():
 	display_mode_select.select(SaveSettings.settings_config.fullscreen_on)
-	GlobalSettings.toggle_fullscreen(SaveSettings.settings_config.fullscreen_on)
 	volume_slider.set_value(SaveSettings.settings_config.volume)
 	brightness_slider.set_value(SaveSettings.settings_config.brightness)
+	language_select._select_int(SaveSettings.settings_config.language)
 	get_tree().call_group("SettingsMenu", "hide")
 	$SettingsButton.show()
 	$KeyMapContainer.hide()
@@ -51,7 +51,7 @@ func _on_BrightnessSlider_value_changed(value):
 
 
 func _on_LanguageSelector_item_selected(index):
-	pass
+	GlobalSettings.choose_language(index)
 
 
 func _on_KeyMappingBtn_pressed():
